@@ -37,7 +37,7 @@ class MultiExecTest extends PredisTestCase
             ->expects($this->once())
             ->method('supportsCommands')
             ->with(array('MULTI', 'EXEC', 'DISCARD'))
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $connection = $this->getMockBuilder('Predis\Connection\NodeConnectionInterface')->getMock();
         $client = new Client($connection, array('commands' => $commands));
@@ -58,12 +58,12 @@ class MultiExecTest extends PredisTestCase
             ->expects($this->once())
             ->method('supportsCommands')
             ->with(array('MULTI', 'EXEC', 'DISCARD'))
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $commands
             ->expects($this->once())
             ->method('supportsCommand')
             ->with('WATCH')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $connection = $this->getMockBuilder('Predis\Connection\NodeConnectionInterface')->getMock();
         $client = new Client($connection, array('commands' => $commands));
@@ -85,12 +85,12 @@ class MultiExecTest extends PredisTestCase
             ->expects($this->once())
             ->method('supportsCommands')
             ->with(array('MULTI', 'EXEC', 'DISCARD'))
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $commands
             ->expects($this->once())
             ->method('supportsCommand')
             ->with('UNWATCH')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $connection = $this->getMockBuilder('Predis\Connection\NodeConnectionInterface')->getMock();
         $client = new Client($connection, array('commands' => $commands));
@@ -840,7 +840,7 @@ class MultiExecTest extends PredisTestCase
         $connection
             ->expects($this->any())
             ->method('executeCommand')
-            ->will($this->returnCallback($executeCallback));
+            ->willReturnCallback($executeCallback);
 
         return $connection;
     }
