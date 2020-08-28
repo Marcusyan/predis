@@ -11,11 +11,12 @@
 
 namespace Predis\Connection\Replication;
 
+use PredisTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Predis\Command;
 use Predis\Connection;
 use Predis\Replication;
 use Predis\Response;
-use PredisTestCase;
 
 /**
  *
@@ -25,7 +26,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetSentinelConnectionThrowsExceptionOnEmptySentinelsPool()
+    public function testMethodGetSentinelConnectionThrowsExceptionOnEmptySentinelsPool(): void
     {
         $this->expectException('Predis\ClientException');
         $this->expectExceptionMessage('No sentinel server available for autodiscovery.');
@@ -37,7 +38,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParametersForSentinelConnectionShouldNotUseDatabaseAndPassword()
+    public function testParametersForSentinelConnectionShouldNotUseDatabaseAndPassword(): void
     {
         $replication = $this->getReplicationConnection('svc', array(
             'tcp://127.0.0.1:5381?role=sentinel&database=1&password=secret',
@@ -57,7 +58,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParametersForSentinelConnectionHaveDefaultTimeout()
+    public function testParametersForSentinelConnectionHaveDefaultTimeout(): void
     {
         $replication = $this->getReplicationConnection('svc', array(
             'tcp://127.0.0.1:5381?role=sentinel',
@@ -72,7 +73,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParametersForSentinelConnectionCanOverrideDefaultTimeout()
+    public function testParametersForSentinelConnectionCanOverrideDefaultTimeout(): void
     {
         $replication = $this->getReplicationConnection('svc', array(
             'tcp://127.0.0.1:5381?role=sentinel&timeout=1',
@@ -90,7 +91,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testConnectionParametersInstanceForSentinelConnectionIsNotModified()
+    public function testConnectionParametersInstanceForSentinelConnectionIsNotModified(): void
     {
         $originalParameters = Connection\Parameters::create(
             'tcp://127.0.0.1:5381?role=sentinel&database=1&password=secret'
@@ -110,7 +111,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetSentinelConnectionReturnsFirstAvailableSentinel()
+    public function testMethodGetSentinelConnectionReturnsFirstAvailableSentinel(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel&alias=sentinel1');
         $sentinel2 = $this->getMockSentinelConnection('tcp://127.0.0.1:5382?role=sentinel&alias=sentinel2');
@@ -124,7 +125,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodAddAttachesMasterOrSlaveNodesToReplication()
+    public function testMethodAddAttachesMasterOrSlaveNodesToReplication(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -150,7 +151,7 @@ class SentinelReplicationTest extends PredisTestCase
      * @group disconnected
      * @FIXME
      */
-    public function testMethodRemoveDismissesMasterOrSlaveNodesFromReplication()
+    public function testMethodRemoveDismissesMasterOrSlaveNodesFromReplication(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -175,7 +176,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetConnectionByIdOnEmptyReplication()
+    public function testMethodGetConnectionByIdOnEmptyReplication(): void
     {
         $replication = $this->getReplicationConnection('svc', array());
 
@@ -185,7 +186,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetConnectionByRole()
+    public function testMethodGetConnectionByRole(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $master = $this->getMockConnection('tcp://127.0.0.1:6381?role=master');
@@ -205,7 +206,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetConnectionByRoleOnEmptyReplicationForcesSentinelQueries()
+    public function testMethodGetConnectionByRoleOnEmptyReplicationForcesSentinelQueries(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -243,7 +244,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetConnectionByRoleUnknown()
+    public function testMethodGetConnectionByRoleUnknown(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $master = $this->getMockConnection('tcp://127.0.0.1:6381?role=master');
@@ -261,7 +262,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodUpdateSentinelsFetchesSentinelNodes()
+    public function testMethodUpdateSentinelsFetchesSentinelNodes(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -309,7 +310,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodUpdateSentinelsRemovesCurrentSentinelAndRetriesNextOneOnFailure()
+    public function testMethodUpdateSentinelsRemovesCurrentSentinelAndRetriesNextOneOnFailure(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel&alias=sentinel1');
         $sentinel1
@@ -360,7 +361,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodUpdateSentinelsThrowsExceptionOnNoAvailableSentinel()
+    public function testMethodUpdateSentinelsThrowsExceptionOnNoAvailableSentinel(): void
     {
         $this->expectException('Predis\ClientException');
         $this->expectExceptionMessage('No sentinel server available for autodiscovery.');
@@ -383,7 +384,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodQuerySentinelFetchesMasterNodeSlaveNodesAndSentinelNodes()
+    public function testMethodQuerySentinelFetchesMasterNodeSlaveNodesAndSentinelNodes(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel&alias=sentinel1');
         $sentinel1
@@ -466,7 +467,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetMasterAsksSentinelForMasterOnMasterNotSet()
+    public function testMethodGetMasterAsksSentinelForMasterOnMasterNotSet(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -487,7 +488,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetMasterThrowsExceptionOnNoAvailableSentinels()
+    public function testMethodGetMasterThrowsExceptionOnNoAvailableSentinels(): void
     {
         $this->expectException('Predis\ClientException');
         $this->expectExceptionMessage('No sentinel server available for autodiscovery.');
@@ -511,7 +512,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetSlavesOnEmptySlavePoolAsksSentinelForSlaves()
+    public function testMethodGetSlavesOnEmptySlavePoolAsksSentinelForSlaves(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -554,7 +555,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetSlavesThrowsExceptionOnNoAvailableSentinels()
+    public function testMethodGetSlavesThrowsExceptionOnNoAvailableSentinels(): void
     {
         $this->expectException('Predis\ClientException');
         $this->expectExceptionMessage('No sentinel server available for autodiscovery.');
@@ -578,7 +579,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodConnectThrowsExceptionOnConnectWithEmptySentinelsPool()
+    public function testMethodConnectThrowsExceptionOnConnectWithEmptySentinelsPool(): void
     {
         $this->expectException('Predis\ClientException');
         $this->expectExceptionMessage('No sentinel server available for autodiscovery.');
@@ -590,7 +591,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodConnectForcesConnectionToSlave()
+    public function testMethodConnectForcesConnectionToSlave(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -615,7 +616,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodConnectOnEmptySlavePoolAsksSentinelForSlavesAndForcesConnectionToSlave()
+    public function testMethodConnectOnEmptySlavePoolAsksSentinelForSlavesAndForcesConnectionToSlave(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -648,6 +649,7 @@ class SentinelReplicationTest extends PredisTestCase
             ->expects($this->once())
             ->method('connect');
 
+        /** @var Connection\FactoryInterface|MockObject */
         $factory = $this->getMockBuilder('Predis\Connection\FactoryInterface')->getMock();
         $factory
             ->expects($this->once())
@@ -669,7 +671,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodConnectOnEmptySlavePoolAsksSentinelForSlavesAndForcesConnectionToMasterIfStillEmpty()
+    public function testMethodConnectOnEmptySlavePoolAsksSentinelForSlavesAndForcesConnectionToMasterIfStillEmpty(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -696,6 +698,7 @@ class SentinelReplicationTest extends PredisTestCase
             ->expects($this->once())
             ->method('connect');
 
+        /** @var Connection\FactoryInterface|MockObject */
         $factory = $this->getMockBuilder('Predis\Connection\FactoryInterface')->getMock();
         $factory
             ->expects($this->once())
@@ -715,7 +718,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodDisconnectForcesDisconnectionOnAllConnectionsInPool()
+    public function testMethodDisconnectForcesDisconnectionOnAllConnectionsInPool(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -749,7 +752,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodIsConnectedReturnConnectionStatusOfCurrentConnection()
+    public function testMethodIsConnectedReturnConnectionStatusOfCurrentConnection(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -773,7 +776,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetConnectionByIdReturnsConnectionWhenFound()
+    public function testMethodGetConnectionByIdReturnsConnectionWhenFound(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -793,7 +796,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodSwitchToSelectsCurrentConnection()
+    public function testMethodSwitchToSelectsCurrentConnection(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -828,7 +831,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodSwitchToThrowsExceptionOnConnectionNotFound()
+    public function testMethodSwitchToThrowsExceptionOnConnectionNotFound(): void
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Invalid connection or connection not found.');
@@ -850,7 +853,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodSwitchToMasterSelectsCurrentConnectionToMaster()
+    public function testMethodSwitchToMasterSelectsCurrentConnectionToMaster(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -877,7 +880,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodSwitchToSlaveSelectsCurrentConnectionToRandomSlave()
+    public function testMethodSwitchToSlaveSelectsCurrentConnectionToRandomSlave(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -904,7 +907,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testGetConnectionByCommandReturnsMasterForWriteCommands()
+    public function testGetConnectionByCommandReturnsMasterForWriteCommands(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -940,7 +943,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testGetConnectionByCommandReturnsSlaveForReadOnlyCommands()
+    public function testGetConnectionByCommandReturnsSlaveForReadOnlyCommands(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -976,7 +979,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testGetConnectionByCommandSwitchesToMasterAfterWriteCommand()
+    public function testGetConnectionByCommandSwitchesToMasterAfterWriteCommand(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -1027,7 +1030,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testGetConnectionByCommandThrowsExceptionOnNodeRoleMismatch()
+    public function testGetConnectionByCommandThrowsExceptionOnNodeRoleMismatch(): void
     {
         $this->expectException('Predis\Replication\RoleException');
         $this->expectExceptionMessage('Expected master but got slave [127.0.0.1:6381]');
@@ -1057,7 +1060,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testGetConnectionByCommandReturnsMasterForReadOnlyOperationsOnUnavailableSlaves()
+    public function testGetConnectionByCommandReturnsMasterForReadOnlyOperationsOnUnavailableSlaves(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -1103,7 +1106,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodExecuteCommandSendsCommandToNodeAndReturnsResponse()
+    public function testMethodExecuteCommandSendsCommandToNodeAndReturnsResponse(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -1151,7 +1154,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodExecuteCommandRetriesReadOnlyCommandOnNextSlaveOnFailure()
+    public function testMethodExecuteCommandRetriesReadOnlyCommandOnNextSlaveOnFailure(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -1208,6 +1211,7 @@ class SentinelReplicationTest extends PredisTestCase
             ))
             ->will($this->returnValue('value'));
 
+        /** @var Connection\FactoryInterface|MockObject */
         $factory = $this->getMockBuilder('Predis\Connection\FactoryInterface')->getMock();
         $factory
             ->expects($this->once())
@@ -1232,7 +1236,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodExecuteCommandRetriesWriteCommandOnNewMasterOnFailure()
+    public function testMethodExecuteCommandRetriesWriteCommandOnNewMasterOnFailure(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
         $sentinel1
@@ -1273,6 +1277,7 @@ class SentinelReplicationTest extends PredisTestCase
             ))
             ->will($this->returnValue(1));
 
+        /** @var Connection\FactoryInterface|MockObject */
         $factory = $this->getMockBuilder('Predis\Connection\FactoryInterface')->getMock();
         $factory
             ->expects($this->once())
@@ -1296,7 +1301,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodExecuteCommandThrowsExceptionOnUnknownServiceName()
+    public function testMethodExecuteCommandThrowsExceptionOnUnknownServiceName(): void
     {
         $this->expectException('Predis\Response\ServerException');
         $this->expectExceptionMessage('ERR No such master with that name');
@@ -1337,7 +1342,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodExecuteCommandThrowsExceptionOnConnectionFailureAndNoAvailableSentinels()
+    public function testMethodExecuteCommandThrowsExceptionOnConnectionFailureAndNoAvailableSentinels(): void
     {
         $this->expectException('Predis\ClientException');
         $this->expectExceptionMessage('No sentinel server available for autodiscovery.');
@@ -1380,7 +1385,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodGetReplicationStrategyReturnsInstance()
+    public function testMethodGetReplicationStrategyReturnsInstance(): void
     {
         $strategy = new Replication\ReplicationStrategy();
         $factory = new Connection\Factory();
@@ -1395,7 +1400,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testMethodSerializeCanSerializeWholeObject()
+    public function testMethodSerializeCanSerializeWholeObject(): void
     {
         $sentinel1 = $this->getMockSentinelConnection('tcp://127.0.0.1:5381?role=sentinel');
 
@@ -1429,11 +1434,11 @@ class SentinelReplicationTest extends PredisTestCase
      *
      * @param string                          $service   Name of the service
      * @param array                           $sentinels Array of sentinels
-     * @param ConnectionFactoryInterface|null $factory   Optional connection factory instance.
+     * @param ConnectionFactoryInterface|null $factory   Optional connection factory instance
      *
      * @return SentinelReplication
      */
-    protected function getReplicationConnection($service, $sentinels, Connection\FactoryInterface $factory = null)
+    protected function getReplicationConnection(string $service, array $sentinels, Connection\FactoryInterface $factory = null): SentinelReplication
     {
         $factory = $factory ?: new Connection\Factory();
 
@@ -1446,7 +1451,7 @@ class SentinelReplicationTest extends PredisTestCase
     /**
      * Returns a base mocked connection from Predis\Connection\NodeConnectionInterface.
      *
-     * @param mixed $parameters Optional parameters.
+     * @param array|string $parameters Optional parameters
      *
      * @return mixed
      */

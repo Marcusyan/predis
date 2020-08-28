@@ -14,15 +14,14 @@ namespace Predis\Connection;
 use PredisTestCase;
 
 /**
- * @todo Parameters::define();
- * @todo Parameters::undefine();
+ *
  */
 class ParametersTest extends PredisTestCase
 {
     /**
      * @group disconnected
      */
-    public function testDefaultValues()
+    public function testDefaultValues(): void
     {
         $defaults = $this->getDefaultParametersArray();
         $parameters = new Parameters();
@@ -35,7 +34,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testIsSet()
+    public function testIsSet(): void
     {
         $parameters = new Parameters();
 
@@ -43,7 +42,7 @@ class ParametersTest extends PredisTestCase
         $this->assertFalse(isset($parameters->unknown));
     }
 
-    public function sharedTestsWithArrayParameters(Parameters $parameters)
+    public function sharedTestsWithArrayParameters(Parameters $parameters): void
     {
         $this->assertTrue(isset($parameters->scheme));
         $this->assertSame('tcp', $parameters->scheme);
@@ -61,7 +60,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testConstructWithArrayParameters()
+    public function testConstructWithArrayParameters(): void
     {
         $parameters = new Parameters(array(
             'port' => 7000,
@@ -74,7 +73,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testCreateWithArrayParameters()
+    public function testCreateWithArrayParameters(): void
     {
         $parameters = new Parameters(array(
             'port' => 7000,
@@ -87,7 +86,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testCreateWithUriString()
+    public function testCreateWithUriString(): void
     {
         $overrides = array(
             'port' => 7000,
@@ -105,7 +104,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testToArray()
+    public function testToArray(): void
     {
         $additional = array('port' => 7000, 'custom' => 'foobar');
         $parameters = new Parameters($additional);
@@ -116,7 +115,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testSerialization()
+    public function testSerialization(): void
     {
         $parameters = new Parameters(array('port' => 7000, 'custom' => 'foobar'));
         $unserialized = unserialize(serialize($parameters));
@@ -134,7 +133,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURI()
+    public function testParsingURI(): void
     {
         $uri = 'tcp://10.10.10.10:6400?timeout=0.5&persistent=1&database=5&password=secret';
 
@@ -154,7 +153,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURIWithRedisScheme()
+    public function testParsingURIWithRedisScheme(): void
     {
         $uri = 'redis://:secret@10.10.10.10:6400/5?timeout=0.5&persistent=1';
 
@@ -181,7 +180,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURIWithRedisSchemeMustPreserveRemainderOfPath()
+    public function testParsingURIWithRedisSchemeMustPreserveRemainderOfPath(): void
     {
         $uri = 'redis://10.10.10.10/5/rest/of/path';
 
@@ -200,7 +199,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testRedisSchemeOverridesPasswordAndDatabaseInQueryString()
+    public function testRedisSchemeOverridesPasswordAndDatabaseInQueryString(): void
     {
         $parameters = Parameters::parse('redis://:secret@10.10.10.10/5?password=ignored&database=4');
 
@@ -211,7 +210,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURIWithUnixDomainSocket()
+    public function testParsingURIWithUnixDomainSocket(): void
     {
         $uri = 'unix:///tmp/redis.sock?timeout=0.5&persistent=1';
 
@@ -228,7 +227,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURIWithUnixDomainSocketOldWay()
+    public function testParsingURIWithUnixDomainSocketOldWay(): void
     {
         $uri = 'unix:/tmp/redis.sock?timeout=0.5&persistent=1';
 
@@ -245,7 +244,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURIWithIncompletePairInQueryString()
+    public function testParsingURIWithIncompletePairInQueryString(): void
     {
         $uri = 'tcp://10.10.10.10?persistent=1&foo=&bar';
 
@@ -263,7 +262,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURIWithMoreThanOneEqualSignInQueryStringPairValue()
+    public function testParsingURIWithMoreThanOneEqualSignInQueryStringPairValue(): void
     {
         $uri = 'tcp://10.10.10.10?foobar=a=b=c&persistent=1';
 
@@ -280,7 +279,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURIWhenQueryStringHasBracketsInFieldnames()
+    public function testParsingURIWhenQueryStringHasBracketsInFieldnames(): void
     {
         $uri = 'tcp://10.10.10.10?persistent=1&metavars[]=foo&metavars[]=hoge';
 
@@ -297,7 +296,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURIWithEmbeddedIPV6AddressShouldStripBracketsFromHost()
+    public function testParsingURIWithEmbeddedIPV6AddressShouldStripBracketsFromHost(): void
     {
         $expected = array('scheme' => 'tcp', 'host' => '::1', 'port' => 7000);
         $this->assertSame($expected, Parameters::parse('tcp://[::1]:7000'));
@@ -309,7 +308,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testParsingURIThrowOnInvalidURI()
+    public function testParsingURIThrowOnInvalidURI(): void
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage("Invalid parameters URI: tcp://invalid:uri");
@@ -320,7 +319,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testToStringWithDefaultParameters()
+    public function testToStringWithDefaultParameters(): void
     {
         $parameters = new Parameters();
 
@@ -330,7 +329,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testToStringWithUnixScheme()
+    public function testToStringWithUnixScheme(): void
     {
         $uri = 'unix:/path/to/redis.sock';
         $parameters = Parameters::create("$uri?foo=bar");
@@ -341,7 +340,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testToStringWithIPv4()
+    public function testToStringWithIPv4(): void
     {
         $uri = 'tcp://127.0.0.1:6379';
         $parameters = Parameters::create("$uri?foo=bar");
@@ -352,7 +351,7 @@ class ParametersTest extends PredisTestCase
     /**
      * @group disconnected
      */
-    public function testToStringWithIPv6()
+    public function testToStringWithIPv6(): void
     {
         $uri = 'tcp://[::1]:6379';
         $parameters = Parameters::create("$uri?foo=bar");
@@ -369,7 +368,7 @@ class ParametersTest extends PredisTestCase
      *
      * @return array Default connection parameters.
      */
-    protected function getDefaultParametersArray()
+    protected function getDefaultParametersArray(): array
     {
         return array(
             'scheme' => 'tcp',
@@ -385,7 +384,7 @@ class ParametersTest extends PredisTestCase
      *
      * @return string URI string.
      */
-    protected function getParametersString(array $parameters)
+    protected function getParametersString(array $parameters): string
     {
         $defaults = $this->getDefaultParametersArray();
 
