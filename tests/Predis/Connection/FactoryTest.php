@@ -306,15 +306,14 @@ class FactoryTest extends PredisTestCase
             ->method('getParameters')
             ->willReturn($parameters);
         $connection
-            ->expects($this->at(1))
+            ->expects($this->exactly(2))
             ->method('addConnectCommand')
-            ->with($this->isRedisCommand('AUTH', array('foobar')));
-        $connection
-            ->expects($this->at(2))
-            ->method('addConnectCommand')
-            ->with($this->isRedisCommand('SELECT', array(0)));
+            ->withConsecutive(
+                array($this->isRedisCommand('AUTH', array('foobar'))),
+                array($this->isRedisCommand('SELECT', array('0')))
+            );
 
-            $factory = new Factory();
+        $factory = new Factory();
 
         $reflection = new \ReflectionObject($factory);
         $prepareConnection = $reflection->getMethod('prepareConnection');
